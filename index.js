@@ -1,5 +1,5 @@
 const { menubar } = require('menubar')
-const { Menu } = require('electron')
+const { Menu, shell } = require('electron')
 
 const mb = menubar({
    browserWindow: {
@@ -15,4 +15,12 @@ const contextMenu = Menu.buildFromTemplate([
 
 mb.on('ready', () => {
 	mb.tray.on('right-click', () => mb.tray.popUpContextMenu(contextMenu))
+
+   mb.window.webContents.on('will-navigate', openExternal)
+   mb.window.webContents.on('new-window', openExternal)
 })
+
+function openExternal(event, url) {
+   event.preventDefault()
+   shell.openExternal(url)
+}
